@@ -1,0 +1,62 @@
+[tool.poetry]
+name = "pdf-extractor"
+version = "0.1.0"
+description = "API for extracting text, tables, and images from PDF files"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.104.0"
+uvicorn = {extras = ["standard"], version = "^0.23.2"}
+pymupdf = "^1.23.3"
+pdfplumber = "^0.10.2"
+pillow = "^10.1.0"
+python-multipart = "^0.0.6"
+python-dotenv = "^1.0.0"
+pydantic-settings = "^2.0.3"
+sqlalchemy = "^2.0.23"
+psycopg2-binary = "^2.9.9"
+alembic = "^1.12.1"
+uuid = "^1.30"
+apscheduler = "^3.10.4"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+black = "^23.10.1"
+isort = "^5.12.0"
+flake8 = "^6.1.0"
+mypy = "^1.6.1"
+pytest-cov = "^4.1.0"
+pytest-asyncio = "^0.21.1"
+httpx = "^0.25.0"
+pytest-mock = "^3.12.0"
+freezegun = "^1.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+
+[[tool.mypy.overrides]]
+module = ["pdfplumber.*", "fitz.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"

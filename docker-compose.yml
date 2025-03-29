@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  pdf-extractor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pdf-extractor
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./uploads:/app/uploads
+    env_file:
+      - .env
+    environment:
+      - DEBUG=True
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DATABASE_URL=postgresql://pdfuser:pdfpassword@postgres:5432/pdfdb
+      - FILE_RETENTION_MINUTES=10
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+
+  migrations:
+    build:
+      context: .
+      dockerfile: Dockerfile.migrate
+    container_name: pdf-migrations
+    environment:
+      - DATABASE_URL=postgresql://pdfuser:pdfpassword@postgres:5432/pdfdb
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: alembic upgrade head
+    restart: "no"
+
+  postgres:
+    image: postgres:14
+    container_name: pdf-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=pdfuser
+      - POSTGRES_PASSWORD=pdfpassword
+      - POSTGRES_DB=pdfdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pdfuser -d pdfdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:
