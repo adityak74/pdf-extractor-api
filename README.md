@@ -150,6 +150,8 @@ API documentation is available at:
 - **RESTful API**: Clean API for interacting with the service
 - **Dockerized**: Easy deployment with Docker Compose
 
+![diagram (1)](https://github.com/user-attachments/assets/c1035f73-8e24-4327-bc62-f91878040e18)
+
 ## Examples
 
 ### Extract content from a PDF file
